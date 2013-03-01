@@ -12,119 +12,74 @@
          <!--[if lte IE 8]>
             <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
             <![endif]-->
-            <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+            <link href="//cdn.jsdelivr.net/foundation/3.2.5/stylesheets/foundation.min.css" rel="stylesheet">
+            <link href="//cdn.jsdelivr.net/foundation/3.2.5/stylesheets/app.css" rel="stylesheet">
+
+
         </head>
 
         <style type="text/css">
         .success{ color: #4DC555;}
         .error{ color: #C41A1A;}
         body{background-color: #C8DBDE;}
-        #map { border-radius: 10px; margin: auto; width: 400px; height: 400px; border: 1px solid black;}
+        #map { margin: auto; height: 400px; border: 1px solid black;}
 
         </style>
         <body>
-            <div>
-                <header>
+
+
+
+            <div class="row">
+                <header class="">
                     <h1>Leaftlet !</h1>
                 </header>
+            </div>
 
 
-                <div id="map"></div>
+            <div class="row">
 
-                <a href="" id="draw">Dessiner</a>
+                <div class="eight columns">
+                    <div id="map">
+                    </div>
+                    <div class="row">
+                        <div class="twelve columns">
+                            <ul class="button-group radius">
+                                <li>
+                                    <a id="action-report" href="#" class="button radius">
+                                        Signaler un problème
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="button radius">Button 2</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="button radius">Button 3</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-            </section>
-            <footer>
-                <p>
-                    &copy; Copyright  by datevid
-                </p>
-            </footer>
-        </div>
-        <script type="text/javascript" charset="utf-8">
-
-        $(function() {
-
-            var center = [14.74026, -17.45605];
-
-        var map = L.map('map').setView(center, 16);
-
-        L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-            maxZoom: 18
-        }).addTo(map);
-
-
-        /**** Recuperer tous les points deja ajoutés  ****/
-
-        jQuery.get('reports', function(data, textStatus, xhr) {
-
-            data.map(function(report){
-
-                alert(report.attributes.id);
-            });
-        });
-
+        </section>
+        <footer class="row">
+            <p>
+                &copy; Copyright  by datevid
+            </p>
+        </footer>
 
 
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="//cdn.jsdelivr.net/foundation/3.2.5/javascripts/modernizr.foundation.js"></script>
+        <script src="//cdn.jsdelivr.net/foundation/3.2.5/javascripts/foundation.min.js"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
 
-        /** Fonction qui permet d'ajouter un markeur ***/
+        <script type="text/javascript" src="{{ URL::to_asset('js/script.js')}}" charset="utf-8"></script>
 
-        function addMarker(event)
-        {
-            var marker = L.marker(event.latlng)
-            .addTo(map);
-
-
-            marker.on('click', function()
-            {
-                marker.bindPopup('Loading...').openPopup();
-
-                // title = prompt('Donnez le titre :');
-
-                // description = prompt('Donnez la description :');
-
-                title = 'test';
-
-                description = 'description test';
-
-                data = {
-                    'title': title,
-                    'description': description,
-                    'lat': this._latlng.lat,
-                    'lng': this._latlng.lng
-                };
-
-                jQuery.post('reports/new',data , function(data, textStatus, xhr) {
-
-                    var popup;
-
-                  if(data.message == 'ok')
-                    marker.bindPopup('<span class="success">Report added !</span>').openPopup();
-                else
-                    marker.bindPopup('<span class="error">Report failed !</span>').openPopup();
-
-
-            });
-
-
-
-            });
-
-        }
-
-
-        map.on('click', function(event){
-
-            addMarker(event);
-
-        });
-
-
-        });
-
-        </script>
+        <script type="text/javascript" src="{{ URL::to_asset('js/actions.js')}}" charset="utf-8"></script>
     </body>
     </html>

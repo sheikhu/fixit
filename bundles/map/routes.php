@@ -1,21 +1,21 @@
 <?php
 
 
-Route::get('reports', function(){
+Route::get('reports', array('before' => 'ajax', 'do' => function(){
 
 	if(Request::ajax())
 	{
-		$reports = Report::all();
+		$reports = Report::with('location')->get();
 
 		return Response::json($reports);
 	}
 
-});
+}));
 
 
 Route::get('test', function(){
 
-	sleep(1);
+
 	if(Request::ajax())
 	{
 		$location = array(Input::get('lat'), Input::get('lng'));
@@ -35,10 +35,14 @@ Route::get('test', function(){
 
 });
 
+Route::get('reports/new', function()
+{
+	return View::make('map::report.new');
+});
+
 
 
 Route::post('reports/new', function(){
-
 
 
 	$locationData = array(
@@ -54,7 +58,11 @@ Route::post('reports/new', function(){
 
 	$location->save();
 
+	$image = Input::file('photo');
 
+	$filename =  Input::file('photo.name');
+
+	Input::upload('photo', 'public/uploads', $filename);
 
 	$reportData = array(
 
@@ -62,19 +70,39 @@ Route::post('reports/new', function(){
 
 		'description' => Input::get('description'),
 
-		'location_id' => $location->id
+		'location_id' => $location->id,
+
+		'photo'	=>	$filename
 		);
 
-		$ok = $location->report()->insert($reportData);
+	$ok = $location->report()->insert($reportData);
 
-		$res = $ok ? 'ok' : 'error';
+	$res = $ok ? 'ok' : 'error';
 
 	$message = array('message' => $res);
 
 
 	return Response::json($message);
 
-
-
 });
- ?>
+
+
+
+Route::any('upload', function()
+{
+	if(Request::method() == 'POST')
+	{
+		$file = Input::file('file');
+
+	$filename =  Input::file('file.name');
+
+	Input::upload('file', 'public/uploads', $filename);
+
+	$s = URL::to_asset('uploads/'.$filename);
+
+	return '<img src="'.$s.'">';
+	}
+
+	return View::make('upload_form');
+});
+?>

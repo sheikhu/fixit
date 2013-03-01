@@ -111,3 +111,10 @@ Route::filter('auth', function()
 {
 	if (Auth::guest()) return Redirect::to('login');
 });
+
+
+Route::filter('ajax', function(){
+
+	if(!Request::ajax())
+		return 'Only ajax request are authorized !';
+});
